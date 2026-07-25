@@ -1,1617 +1,595 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Campus // Ultimate Management & 3D Interactive Console</title>
-    
-    <!-- Tech Stack Stylesheets & Vector Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brandPrimary: '#2563eb', // Indigo / Royal Blue
-                        brandSuccess: '#10b981', // Emerald
-                        brandWarning: '#f59e0b', // Amber
-                        brandDanger: '#ef4444'   // Crimson Red
-                    },
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        space: ['"Space Grotesk"', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            background-color: #f1f5f9;
-            overflow: hidden;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            user-select: none;
-            color: #1e293b;
-        }
-        /* Premium White Glassmorphic Panels */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
-        }
-        .sidebar-btn-active {
-            color: #2563eb;
-            background-color: rgba(37, 99, 235, 0.08);
-            border-right: 3px solid #2563eb;
-        }
-        /* Sleek custom scrollbars */
-        ::-webkit-scrollbar {
-            width: 5px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(148, 163, 184, 0.3);
-            border-radius: 6px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(148, 163, 184, 0.6);
-        }
-        /* 3D Flipping Animation Rules */
-        .card-perspective {
-            perspective: 1200px;
-        }
-        .card-rotator {
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-style: preserve-3d;
-        }
-        .card-flipped {
-            transform: rotateY(180deg);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nitesh Gupta — .NET Full Stack Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F2F4F7;
+    --panel: #FFFFFF;
+    --panel-edge: #E1E5EA;
+    --ink: #12161C;
+    --muted: #5B6572;
+    --faint: #98A1AC;
+    --accent: #3452E1;
+    --accent-dim: #E7EBFC;
+    --add: #1F9D63;
+    --add-dim: #E4F5EC;
+    --tag: #B8681F;
+    --tag-dim: #FBEEDE;
+    --rule: #DFE3E8;
+    --radius: 10px;
+    --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .wrap{
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 24px 96px;
+  }
+
+  /* ---------- Header / repo card ---------- */
+  .repo-card{
+    background: var(--panel);
+    border: 1px solid var(--panel-edge);
+    border-radius: var(--radius);
+    padding: 28px 28px 24px;
+    box-shadow: 0 1px 2px rgba(18,22,28,0.03);
+  }
+  .repo-path{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.01em;
+  }
+  .repo-path .slash{ color: var(--faint); margin: 0 2px; }
+  .repo-path .repo{ color: var(--accent); font-weight: 600; }
+
+  h1{
+    font-family: var(--sans);
+    font-weight: 800;
+    font-size: clamp(28px, 5vw, 38px);
+    letter-spacing: -0.02em;
+    margin: 10px 0 4px;
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+  }
+  .cursor{
+    display:inline-block;
+    width: 3px; height: 0.9em;
+    background: var(--accent);
+    animation: blink 1.1s steps(1) infinite;
+    vertical-align: -0.1em;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  .role-line{
+    font-size: 16px;
+    color: var(--muted);
+    margin: 0 0 18px;
+  }
+  .role-line strong{ color: var(--ink); font-weight: 600; }
+
+  .badges{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom: 18px; }
+  .badge{
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 4px 9px;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    color: var(--muted);
+    background: #FBFCFD;
+    white-space: nowrap;
+  }
+  .badge.branch{ color: var(--add); border-color: var(--add-dim); background: var(--add-dim); }
+  .badge.branch::before{ content: "⎇ "; }
+
+  .meta-row{
+    display:flex; flex-wrap:wrap; gap: 16px 22px;
+    border-top: 1px solid var(--rule);
+    padding-top: 16px;
+    font-size: 14px;
+  }
+  .meta-item{ display:flex; align-items:center; gap:7px; color: var(--muted); }
+  .meta-item svg{ width:15px; height:15px; flex:none; color: var(--faint); }
+  .meta-item a{ color: var(--ink); font-weight: 500; }
+  .meta-item a:hover{ color: var(--accent); }
+
+  /* ---------- Section headers ---------- */
+  .section{ margin-top: 44px; }
+  .section-head{
+    display:flex; align-items:baseline; gap:10px;
+    margin-bottom: 18px;
+  }
+  .section-head .hash{
+    font-family: var(--mono);
+    color: var(--faint);
+    font-size: 13px;
+  }
+  .section-head h2{
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-weight: 700;
+    color: var(--muted);
+    margin: 0;
+  }
+  .section-head .rule{
+    flex:1; height:1px; background: var(--rule);
+  }
+
+  /* ---------- Commit log (experience) ---------- */
+  .log{
+    border-left: 2px solid var(--rule);
+    margin-left: 6px;
+  }
+  .commit{
+    position: relative;
+    padding: 0 0 30px 26px;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: rise 0.5s ease forwards;
+  }
+  .commit:last-child{ padding-bottom: 4px; }
+  @keyframes rise{ to{ opacity:1; transform:none; } }
+
+  .commit::before{
+    content:"";
+    position:absolute;
+    left: -7px; top: 4px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--panel);
+    border: 2px solid var(--accent);
+  }
+  .commit.current::before{ background: var(--accent); box-shadow: 0 0 0 4px var(--accent-dim); }
+
+  .commit-head{
+    display:flex; align-items:baseline; gap: 10px; flex-wrap:wrap;
+    margin-bottom: 2px;
+  }
+  .commit-hash{
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--accent);
+    background: var(--accent-dim);
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+  .commit-title{
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .commit-sub{
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--muted);
+    margin: 2px 0 12px;
+  }
+  .commit-sub .org{ color: var(--ink); font-weight: 600; }
+
+  .diffline{
+    display:grid;
+    grid-template-columns: 15px 1fr auto;
+    gap: 10px;
+    align-items: baseline;
+    font-size: 14.5px;
+    color: var(--ink);
+    padding: 6px 0;
+    border-top: 1px dashed var(--rule);
+  }
+  .diffline:first-of-type{ border-top: none; }
+  .diffline .plus{
+    font-family: var(--mono);
+    color: var(--add);
+    font-weight: 700;
+  }
+  .diffline .stat{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--faint);
+    white-space: nowrap;
+  }
+  .diffline .stat b{ color: var(--add); font-weight: 700; }
+  .barwrap{
+    grid-column: 2 / span 2;
+    height: 5px;
+    background: var(--rule);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 2px;
+  }
+  .bar{
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--add));
+    border-radius: 3px;
+    width: 0;
+    transition: width 1.1s cubic-bezier(.2,.7,.3,1);
+  }
+
+  /* ---------- Skills (stack.json) ---------- */
+  .stackblock{
+    background: #11151B;
+    color: #D8DEE9;
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    overflow-x: auto;
+    box-shadow: 0 1px 2px rgba(18,22,28,0.05);
+  }
+  .stackblock .punc{ color: #6B7685; }
+  .stackblock .key{ color: #7DB3FF; }
+  .stackblock .str{ color: #8FD6A8; }
+  .stackblock .comment{ color: #6B7685; font-style: italic; }
+
+  /* ---------- Two-col: leadership + education ---------- */
+  .grid2{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 640px){ .grid2{ grid-template-columns: 1fr; } }
+
+  .card{
+    background: var(--panel);
+    border: 1px solid var(--panel-edge);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+  }
+  .card h3{
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin: 0 0 14px;
+  }
+  .tagitem{
+    display:flex; gap: 10px; align-items:flex-start;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  .tagitem:last-child{ margin-bottom: 0; }
+  .tag-pill{
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--tag);
+    background: var(--tag-dim);
+    border-radius: 4px;
+    padding: 2px 6px;
+    white-space: nowrap;
+    flex: none;
+    margin-top: 1px;
+  }
+  .edu-degree{ font-weight: 700; font-size: 15px; }
+  .edu-school{ color: var(--muted); font-size: 13.5px; margin-top: 2px; }
+  .edu-score{
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--faint);
+    margin-top: 6px;
+  }
+
+  footer{
+    margin-top: 56px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--faint);
+    display:flex; justify-content: space-between; flex-wrap:wrap; gap:8px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+    .cursor{ opacity: 1; }
+  }
+</style>
 </head>
-<body class="antialiased min-h-screen relative flex flex-col justify-between">
+<body>
 
-    <!-- FULL SCREEN 3D ARCHITECTURAL CANVAS -->
-    <div id="canvas-container" class="absolute inset-0 w-full h-full -z-10 cursor-grab active:cursor-grabbing"></div>
+<div class="wrap">
 
-    <!-- MAIN PLATFORM ROOT CONTAINER -->
-    <div id="app-root" class="w-full h-screen flex relative z-10 p-4 gap-4 overflow-hidden transition-opacity duration-500">
-        
-        <!-- LEFT SIDEBAR SYSTEM (Stateful Controls & Navigation) -->
-        <aside class="w-64 glass-panel rounded-2xl flex flex-col justify-between overflow-hidden shrink-0 hidden md:flex">
-            <div>
-                <!-- Brand identity -->
-                <div class="p-6 border-b border-slate-100 flex items-center gap-3">
-                    <div class="w-8 h-8 bg-brandPrimary rounded-lg flex items-center justify-center text-white shadow-md shadow-brandPrimary/25">
-                        <i data-lucide="graduation-cap" class="w-5 h-5 stroke-[2.5]"></i>
-                    </div>
-                    <div>
-                        <h1 class="font-space font-bold text-sm leading-none tracking-tight text-slate-800">NEXUS CAMPUS</h1>
-                        <p class="text-[0.65rem] text-slate-400 uppercase tracking-wider font-bold mt-1">SaaS Portal v4.0</p>
-                    </div>
-                </div>
+  <!-- Header -->
+  <header class="repo-card">
+    <div class="repo-path"><span class="repo">nitesh-gupta</span><span class="slash">/</span>dotnet-fullstack-developer</div>
+    <h1>Nitesh Gupta<span class="cursor" aria-hidden="true"></span></h1>
+    <p class="role-line">Senior Software Engineer at <strong>Xoriant Solution</strong> — 7+ years shipping and modernizing <strong>.NET</strong> &amp; <strong>Angular</strong> systems for enterprise scale.</p>
 
-                <!-- Navigation Hub -->
-                <nav class="p-4 space-y-1">
-                    <button onclick="switchTab('dashboard')" id="btn-tab-dashboard" class="w-full py-3 px-4 rounded-xl text-xs font-semibold text-slate-500 hover:text-brandPrimary hover:bg-slate-50/80 transition flex items-center gap-3 sidebar-btn-active">
-                        <i data-lucide="layout-dashboard" class="w-4.5 h-4.5"></i>
-                        <span>Campus Dashboard</span>
-                    </button>
-                    <button onclick="switchTab('admission')" id="btn-tab-admission" class="w-full py-3 px-4 rounded-xl text-xs font-semibold text-slate-500 hover:text-brandPrimary hover:bg-slate-50/80 transition flex items-center gap-3">
-                        <i data-lucide="user-plus" class="w-4.5 h-4.5"></i>
-                        <span>Admissions Office</span>
-                    </button>
-                    <button onclick="switchTab('classes')" id="btn-tab-classes" class="w-full py-3 px-4 rounded-xl text-xs font-semibold text-slate-500 hover:text-brandPrimary hover:bg-slate-50/80 transition flex items-center gap-3">
-                        <i data-lucide="calendar" class="w-4.5 h-4.5"></i>
-                        <span>Class Schedules</span>
-                    </button>
-                    <button onclick="switchTab('exams')" id="btn-tab-exams" class="w-full py-3 px-4 rounded-xl text-xs font-semibold text-slate-500 hover:text-brandPrimary hover:bg-slate-50/80 transition flex items-center gap-3">
-                        <i data-lucide="clipboard-list" class="w-4.5 h-4.5"></i>
-                        <span>LMS Exam Hall</span>
-                    </button>
-                    <button onclick="switchTab('teachers')" id="btn-tab-teachers" class="w-full py-3 px-4 rounded-xl text-xs font-semibold text-slate-500 hover:text-brandPrimary hover:bg-slate-50/80 transition flex items-center gap-3">
-                        <i data-lucide="users-2" class="w-4.5 h-4.5"></i>
-                        <span>Faculty Directory</span>
-                    </button>
-                </nav>
-            </div>
-
-            <!-- Global Hardware / Audio Settings -->
-            <div class="p-4 border-t border-slate-100 bg-slate-50/50 space-y-2">
-                <div class="flex gap-2">
-                    <button onclick="toggleSoundEngine()" class="flex-1 py-2.5 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg text-slate-600 transition flex items-center justify-center gap-1.5 text-[0.7rem] font-bold shadow-sm">
-                        <i id="sound-icon" data-lucide="volume-x" class="w-4 h-4 text-slate-400"></i>
-                        <span>Chime Sound</span>
-                    </button>
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <button onclick="toggleHUDVisibility()" class="py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-[0.7rem] font-bold text-slate-700 transition" title="Inspect Campus Space">
-                        Inspect
-                    </button>
-                    <button onclick="resetLocalDatabase()" class="py-2 bg-red-50 hover:bg-red-100 rounded-lg text-[0.7rem] font-bold text-brandDanger transition" title="Clear All LocalStorage Data">
-                        Reset DB
-                    </button>
-                </div>
-            </div>
-        </aside>
-
-        <!-- MAIN VIEWPORT CONTAINER -->
-        <main class="flex-1 flex flex-col justify-between h-full overflow-hidden">
-            
-            <!-- SYSTEM HEADER -->
-            <header class="glass-panel w-full p-4 px-6 rounded-2xl flex justify-between items-center shrink-0">
-                <div class="flex items-center gap-4">
-                    <div>
-                        <p class="text-[0.65rem] text-slate-400 uppercase tracking-wider font-extrabold" id="lbl-sector-focus">Active Sector: Campus Quadrant</p>
-                        <h2 class="text-sm font-bold text-slate-800" id="header-context-title">Campus Operations Hub</h2>
-                    </div>
-                </div>
-
-                <!-- Clock & Sync Badge -->
-                <div class="flex items-center gap-4">
-                    <div class="hidden md:flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-full text-[0.65rem] font-mono text-slate-600 font-bold" id="live-system-clock">
-                        00:00:00 UTC
-                    </div>
-                    <div class="flex items-center gap-2 bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-full text-[0.65rem] font-bold text-emerald-600">
-                        <span class="w-1.5 h-1.5 rounded-full bg-brandSuccess animate-pulse"></span>
-                        State DB Loaded
-                    </div>
-                </div>
-            </header>
-
-            <!-- MAIN SLIDING MANAGEMENT INTERFACE -->
-            <div class="flex-1 w-full max-w-2xl mx-auto md:mx-0 mt-4 glass-panel rounded-2xl flex flex-col justify-between overflow-hidden h-[calc(100vh-140px)]">
-                
-                <!-- SCROLLABLE PAGE WORKSPACE -->
-                <div class="flex-1 overflow-y-auto p-6 space-y-6" id="panel-scroll-container">
-                    
-                    <!-- TAB 1: CAMPUS DASHBOARD -->
-                    <div id="page-dashboard" class="space-y-6 page-section">
-                        <div>
-                            <span class="bg-brandPrimary/10 text-brandPrimary text-[0.6rem] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Operational Matrix</span>
-                            <h3 class="text-lg font-bold text-slate-800 mt-2">Active Campus Dashboard</h3>
-                            <p class="text-xs text-slate-500 leading-relaxed">Dynamic telemetry metrics representing real student cohorts, active faculty grids, and system processes.</p>
-                        </div>
-
-                        <!-- Real-time Connected KPI Cards -->
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-slate-50/50 border border-slate-100 p-4 rounded-xl space-y-1">
-                                <div class="flex justify-between items-center text-slate-400">
-                                    <span class="text-[0.65rem] font-bold uppercase tracking-wider text-slate-500">Student Cohort</span>
-                                    <i data-lucide="users" class="w-4.5 h-4.5 text-brandPrimary"></i>
-                                </div>
-                                <p class="text-2xl font-space font-bold text-slate-800" id="stat-students">0</p>
-                                <span class="text-[0.55rem] text-brandSuccess font-bold block">// Dynamic Registered Database</span>
-                            </div>
-                            <div class="bg-slate-50/50 border border-slate-100 p-4 rounded-xl space-y-1">
-                                <div class="flex justify-between items-center text-slate-400">
-                                    <span class="text-[0.65rem] font-bold uppercase tracking-wider text-slate-500">Active Faculty</span>
-                                    <i data-lucide="shield-check" class="w-4.5 h-4.5 text-emerald-500"></i>
-                                </div>
-                                <p class="text-2xl font-space font-bold text-slate-800" id="stat-teachers">0</p>
-                                <span class="text-[0.55rem] text-slate-400 block" id="stat-faculty-ratio">// Faculty Ratio 1:0</span>
-                            </div>
-                            <div class="bg-slate-50/50 border border-slate-100 p-4 rounded-xl col-span-2 space-y-2">
-                                <div class="flex justify-between items-center text-slate-400">
-                                    <span class="text-[0.65rem] font-bold uppercase tracking-wider text-slate-500">Academic Passing Rate</span>
-                                    <i data-lucide="trending-up" class="w-4.5 h-4.5 text-amber-500"></i>
-                                </div>
-                                <div class="flex justify-between items-end">
-                                    <p class="text-3xl font-space font-bold text-slate-800" id="stat-average-grade">0%</p>
-                                    <span class="text-xs font-semibold text-slate-500" id="stat-exams-taken">0 Exams Logged</span>
-                                </div>
-                                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden border border-slate-100">
-                                    <div class="bg-brandPrimary h-full transition-all duration-500" id="bar-average-grade" style="width: 0%;"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Stateful SaaS Tasks / Checklist -->
-                        <div class="space-y-3">
-                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest">// Campus Operations Checklist</h4>
-                            <div class="p-4 bg-slate-50/50 border border-slate-200/60 rounded-xl space-y-3">
-                                <!-- Tasks List Mount -->
-                                <div id="dashboard-tasks-container" class="space-y-2 text-xs">
-                                    <!-- Dynamic tasks rendered here -->
-                                </div>
-                                <!-- Task Creator Form -->
-                                <form id="form-task-creator" onsubmit="handleAddTask(event)" class="flex gap-2 pt-2 border-t border-slate-200/50">
-                                    <input type="text" id="input-task-text" required placeholder="Add new institutional task..." class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-brandPrimary/25">
-                                    <button type="submit" class="px-3 py-1.5 bg-brandPrimary text-white rounded-lg text-xs font-bold hover:bg-brandPrimary/90 transition">
-                                        Add
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-
-                        <!-- Interactive System Audit Activity Log -->
-                        <div class="border-t border-slate-100 pt-4 space-y-3">
-                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest">// Platform Activity Logger</h4>
-                            <div class="space-y-1.5 max-h-48 overflow-y-auto pr-1" id="activity-log-feed">
-                                <!-- Dynamic logs map here -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB 2: ADMISSIONS CRUD OFFICE -->
-                    <div id="page-admission" class="space-y-6 page-section hidden">
-                        <div>
-                            <span class="bg-brandPrimary/10 text-brandPrimary text-[0.6rem] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Admissions Grid</span>
-                            <h3 class="text-lg font-bold text-slate-800 mt-2">Student Registry & Admissions</h3>
-                            <p class="text-xs text-slate-500">Register new students into the central state system, view generated smart-badges, or manage previous registrants.</p>
-                        </div>
-
-                        <!-- Add Student Form -->
-                        <form id="form-registration" onsubmit="handleAdmissionsSubmit(event)" class="space-y-4 p-5 bg-slate-50/50 border border-slate-200/60 rounded-2xl">
-                            <div class="grid grid-cols-2 gap-4 text-xs">
-                                <div class="col-span-2">
-                                    <label class="text-[0.65rem] font-bold text-slate-500 uppercase block mb-1">Full Student Name</label>
-                                    <input type="text" id="student-name" required placeholder="e.g. Katherine Vance" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-brandPrimary/25 focus:border-brandPrimary transition">
-                                </div>
-                                <div>
-                                    <label class="text-[0.65rem] font-bold text-slate-500 uppercase block mb-1">Academic Division</label>
-                                    <select id="student-dept" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-brandPrimary/25">
-                                        <option value="STEM Division">Science & Tech (STEM)</option>
-                                        <option value="Fine Arts">Fine Arts & Design</option>
-                                        <option value="Humanities">Classical Humanities</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="text-[0.65rem] font-bold text-slate-500 uppercase block mb-1">Enrollment Grade Year</label>
-                                    <select id="student-year" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-brandPrimary/25">
-                                        <option value="Freshman (Y1)">First Year (Freshman)</option>
-                                        <option value="Sophomore (Y2)">Second Year (Sophomore)</option>
-                                        <option value="Junior (Y3)">Third Year (Junior)</option>
-                                        <option value="Senior (Y4)">Fourth Year (Senior)</option>
-                                    </select>
-                                </div>
-                                <div class="col-span-2">
-                                    <label class="text-[0.65rem] font-bold text-slate-500 uppercase block mb-1">Course Elective Concentration</label>
-                                    <input type="text" id="student-extra" required placeholder="e.g. Deep Learning Architectures" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-brandPrimary/25 focus:border-brandPrimary transition">
-                                </div>
-                            </div>
-                            <button type="submit" class="w-full py-3 bg-brandPrimary hover:bg-brandPrimary/90 text-white font-semibold rounded-xl text-xs uppercase tracking-wider transition shadow-md shadow-brandPrimary/15 flex items-center justify-center gap-2">
-                                <i data-lucide="user-plus" class="w-4 h-4"></i> Validate & Enroll Student
-                            </button>
-                        </form>
-
-                        <!-- Dynamic Student Database Registry Table -->
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center">
-                                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest">// Student Body Registrar</h4>
-                                <input type="text" id="search-student" oninput="drawStudentRegistryTable()" placeholder="Search registry..." class="bg-white border border-slate-200 rounded-lg px-2.5 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-brandPrimary">
-                            </div>
-                            <div class="overflow-x-auto border border-slate-200/60 rounded-xl">
-                                <table class="w-full text-xs text-left text-slate-600">
-                                    <thead class="bg-slate-50 text-[0.6rem] font-bold uppercase text-slate-400 border-b border-slate-200">
-                                        <tr>
-                                            <th class="px-4 py-2.5">Name</th>
-                                            <th class="px-4 py-2.5">Department</th>
-                                            <th class="px-4 py-2.5">Academic ID</th>
-                                            <th class="px-4 py-2.5 text-right">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="student-table-body" class="divide-y divide-slate-100">
-                                        <!-- Students mapped via JS -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB 3: SCHEDULES & TIMETABLE CONSOLE -->
-                    <div id="page-classes" class="space-y-6 page-section hidden">
-                        <div>
-                            <span class="bg-brandPrimary/10 text-brandPrimary text-[0.6rem] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Course Syllabus</span>
-                            <h3 class="text-lg font-bold text-slate-800 mt-2">Active Curriculums & Class Scheduler</h3>
-                            <p class="text-xs text-slate-500 leading-relaxed">Schedule new courses below. Selecting any curriculum card automatically focuses the 3D campus background over that specific sector [1, 2].</p>
-                        </div>
-
-                        <!-- Schedule Creator Form -->
-                        <form id="form-schedule-creator" onsubmit="handleCreateClass(event)" class="p-5 bg-slate-50/50 border border-slate-200/60 rounded-2xl space-y-4">
-                            <span class="text-[0.65rem] font-bold uppercase tracking-widest block text-slate-400">// Create New Curriculum Slot</span>
-                            <div class="grid grid-cols-2 gap-3 text-xs">
-                                <div class="col-span-2">
-                                    <label class="text-[0.6rem] block uppercase font-bold text-slate-500 mb-1">Class Subject Title</label>
-                                    <input type="text" id="class-title" required placeholder="e.g. Advanced Machine Vision" class="w-full bg-white border border-slate-200 rounded-lg p-2.5 focus:outline-none">
-                                </div>
-                                <div>
-                                    <label class="text-[0.6rem] block uppercase font-bold text-slate-500 mb-1">Assigned Teacher</label>
-                                    <select id="class-teacher-select" class="w-full bg-white border border-slate-200 rounded-lg p-2.5 focus:outline-none">
-                                        <!-- Mapped dynamic teachers option -->
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="text-[0.6rem] block uppercase font-bold text-slate-500 mb-1">Classroom Sector</label>
-                                    <select id="class-room" class="w-full bg-white border border-slate-200 rounded-lg p-2.5 focus:outline-none">
-                                        <option value="STEM Wing A">STEM Wing (Science Complex)</option>
-                                        <option value="Dome Pod B">Dome Pod B (Exam Hall)</option>
-                                        <option value="Monolith Ring 2">Monolith Floor 2 (Admin)</option>
-                                        <option value="Lodge Suite C">Lodge Suite C (Faculty)</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="text-[0.6rem] block uppercase font-bold text-slate-500 mb-1">Assigned Department</label>
-                                    <select id="class-dept" class="w-full bg-white border border-slate-200 rounded-lg p-2.5 focus:outline-none">
-                                        <option value="STEM">STEM</option>
-                                        <option value="Humanities">Humanities</option>
-                                        <option value="Fine Arts">Fine Arts</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="text-[0.6rem] block uppercase font-bold text-slate-500 mb-1">Timing Window</label>
-                                    <input type="text" id="class-time" required placeholder="e.g. 11:00 - 12:30" class="w-full bg-white border border-slate-200 rounded-lg p-2.5 focus:outline-none">
-                                </div>
-                            </div>
-                            <button type="submit" class="w-full py-2 bg-brandPrimary hover:bg-brandPrimary/90 text-white rounded-xl text-xs font-semibold uppercase transition">
-                                Append To Roster
-                            </button>
-                        </form>
-
-                        <!-- Dynamic Timetable Roster -->
-                        <div class="space-y-3">
-                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest">// Campus Class Schedules</h4>
-                            <div id="classes-schedule-list" class="space-y-2.5">
-                                <!-- Classes loaded via state JS -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB 4: STATEFUL LMS TESTING CENTER -->
-                    <div id="page-exams" class="space-y-6 page-section hidden">
-                        <div>
-                            <span class="bg-amber-500/10 text-amber-600 text-[0.6rem] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Examinations Division</span>
-                            <h3 class="text-lg font-bold text-slate-800 mt-2">Active Assessments & Grades Ledger</h3>
-                            <p class="text-xs text-slate-500">Take timed quizzes that directly bind grades to registered students in your system database.</p>
-                        </div>
-
-                        <!-- Active Quiz Launcher (Binds to Real Students!) -->
-                        <div id="exam-launcher-block" class="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-4">
-                            <div class="grid grid-cols-2 gap-4 text-xs">
-                                <div>
-                                    <label class="text-[0.65rem] font-bold uppercase text-slate-400 block mb-1">Select Candidate Student</label>
-                                    <select id="exam-student-select" class="w-full bg-white border border-slate-200 rounded-xl p-3 focus:outline-none font-semibold">
-                                        <!-- Dynamically loaded students from DB -->
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="text-[0.65rem] font-bold uppercase text-slate-400 block mb-1">Select Assessment</label>
-                                    <select id="exam-select-target" class="w-full bg-white border border-slate-200 rounded-xl p-3 focus:outline-none font-semibold">
-                                        <option value="physics">High-Energy Physics Assessment</option>
-                                        <option value="math">Discrete Structures Evaluation</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <button onclick="launchAcademicExam()" class="w-full py-3 bg-brandPrimary hover:bg-brandPrimary/90 text-white font-semibold rounded-xl text-xs uppercase tracking-widest transition">
-                                Initialize Timed Assessment Session
-                            </button>
-                        </div>
-
-                        <!-- LMS Interactive Quiz Window -->
-                        <div id="exam-quiz-board" class="hidden p-5 bg-white border border-slate-200 shadow-xl rounded-2xl space-y-4 relative">
-                            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                                <span class="text-[0.65rem] text-brandPrimary font-mono uppercase tracking-widest font-extrabold" id="quiz-meta-tag">Physics Assessment</span>
-                                <span class="text-xs text-red-500 font-mono font-bold flex items-center gap-1" id="quiz-countdown">
-                                    <i data-lucide="clock" class="w-4 h-4"></i> Time Remaining: 30s
-                                </span>
-                            </div>
-                            
-                            <div class="space-y-4">
-                                <p class="text-xs text-slate-800 font-bold leading-relaxed" id="quiz-question-lbl">Evaluating question context...</p>
-                                <div class="space-y-2.5" id="quiz-options-container">
-                                    <!-- Dynamic options -->
-                                </div>
-                            </div>
-
-                            <div class="flex justify-end pt-3 border-t border-slate-100">
-                                <button onclick="submitQuizOption()" class="px-5 py-2.5 bg-brandPrimary hover:bg-brandPrimary/90 text-white font-bold rounded-xl text-xs uppercase tracking-wider transition">
-                                    Lock Answer Choice
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Live Grades Ledger Table (Linked to Students) -->
-                        <div class="space-y-3">
-                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest">// Authenticated Grades Ledger</h4>
-                            <div class="overflow-x-auto border border-slate-200/60 rounded-xl">
-                                <table class="w-full text-xs text-left text-slate-600">
-                                    <thead class="bg-slate-50 text-[0.6rem] font-bold uppercase text-slate-400 border-b border-slate-200">
-                                        <tr>
-                                            <th class="px-4 py-2.5">Student Candidate</th>
-                                            <th class="px-4 py-2.5">Assessment Exam</th>
-                                            <th class="px-4 py-2.5">Final Mark</th>
-                                            <th class="px-4 py-2.5">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="grades-ledger-body" class="divide-y divide-slate-100">
-                                        <!-- JS Mapped Grade records -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB 5: FACULTY & CONSULTATION BOOKINGS -->
-                    <div id="page-teachers" class="space-y-6 page-section hidden">
-                        <div>
-                            <span class="bg-emerald-500/10 text-emerald-600 text-[0.6rem] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Faculty Board</span>
-                            <h3 class="text-lg font-bold text-slate-800 mt-2">Active School Instructors</h3>
-                            <p class="text-xs text-slate-500">Recruit new faculty members or schedule office hour consultations below.</p>
-                        </div>
-
-                        <!-- Recruit Faculty Form -->
-                        <form id="form-faculty-creator" onsubmit="handleRecruitFaculty(event)" class="p-5 bg-slate-50/50 border border-slate-200/60 rounded-2xl space-y-4">
-                            <span class="text-[0.65rem] font-bold uppercase tracking-widest block text-slate-400">// Recruit New Professor</span>
-                            <div class="grid grid-cols-2 gap-3 text-xs">
-                                <div>
-                                    <label class="text-[0.6rem] block uppercase font-bold text-slate-500 mb-1">Professor Name</label>
-                                    <input type="text" id="faculty-name" required placeholder="e.g. Dr. Arthur Pendelton" class="w-full bg-white border border-slate-200 rounded-lg p-2.5 focus:outline-none">
-                                </div>
-                                <div>
-                                    <label class="text-[0.6rem] block uppercase font-bold text-slate-500 mb-1">Academic Specialty Role</label>
-                                    <input type="text" id="faculty-role" required placeholder="e.g. Kinetic Sculpting Coordinator" class="w-full bg-white border border-slate-200 rounded-lg p-2.5 focus:outline-none">
-                                </div>
-                                <div>
-                                    <label class="text-[0.6rem] block uppercase font-bold text-slate-500 mb-1">Department</label>
-                                    <select id="faculty-dept" class="w-full bg-white border border-slate-200 rounded-lg p-2.5 focus:outline-none">
-                                        <option value="STEM">STEM</option>
-                                        <option value="Humanities">Humanities</option>
-                                        <option value="Fine Arts">Fine Arts</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="text-[0.6rem] block uppercase font-bold text-slate-500 mb-1">Available Office Hours</label>
-                                    <input type="text" id="faculty-hours" required placeholder="e.g. Mon / Thu Only" class="w-full bg-white border border-slate-200 rounded-lg p-2.5 focus:outline-none">
-                                </div>
-                            </div>
-                            <button type="submit" class="w-full py-2 bg-brandPrimary hover:bg-brandPrimary/90 text-white rounded-xl text-xs font-semibold uppercase transition">
-                                Approve Faculty Contract
-                            </button>
-                        </form>
-
-                        <!-- Faculty Directory Grid -->
-                        <div class="space-y-3">
-                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest">// Faculty Directory Roster</h4>
-                            <div class="space-y-3" id="teachers-grid-block">
-                                <!-- Faculty Mapped dynamically via JS -->
-                            </div>
-                        </div>
-
-                        <!-- Stateful Booked Consultation Logs -->
-                        <div class="space-y-3 border-t border-slate-100 pt-4">
-                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest">// Booked Consultations Log</h4>
-                            <div id="consultation-bookings-block" class="space-y-2 text-xs">
-                                <!-- Dynamically booked logs mapped here -->
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Footer of operations panel -->
-                <div class="p-4 px-6 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between text-[0.65rem] font-semibold text-slate-400 shrink-0">
-                    <span>Operations Panel</span>
-                    <span>Nexus Core Platform</span>
-                </div>
-
-            </div>
-        </main>
+    <div class="badges">
+      <span class="badge branch">main</span>
+      <span class="badge">.NET Core</span>
+      <span class="badge">Angular</span>
+      <span class="badge">C#</span>
+      <span class="badge">Azure DevOps</span>
+      <span class="badge">MSSQL</span>
     </div>
 
-    <!-- VIEW PORT CARD MODAL OVERLAY (Saves HTML node structure overhead) -->
-    <div id="badge-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-6 transition-all duration-300 opacity-0 pointer-events-none">
-        <div class="max-w-xs w-full bg-white/10 p-4 rounded-3xl border border-white/20 shadow-2xl relative">
-            <button onclick="closeBadgeModal()" class="absolute -top-3 -right-3 w-8 h-8 bg-slate-100 text-slate-600 rounded-full flex items-center justify-center shadow hover:bg-white transition">
-                <i data-lucide="x" class="w-4.5 h-4.5"></i>
-            </button>
-            
-            <div class="card-perspective w-full h-96 cursor-pointer" onclick="toggleIDBadgeFlip()">
-                <div id="badge-rotator" class="card-rotator w-full h-full relative">
-                    
-                    <!-- FRONT OF CARD -->
-                    <div class="absolute inset-0 w-full h-full bg-white border border-slate-200 shadow-xl rounded-2xl p-6 flex flex-col justify-between" style="backface-visibility: hidden;">
-                        <div class="flex justify-between items-start border-b border-slate-100 pb-3">
-                            <div>
-                                <h4 class="font-space font-bold text-[0.6rem] uppercase text-brandPrimary tracking-wider">Nexus Academy</h4>
-                                <p class="text-[0.5rem] text-slate-400 font-semibold uppercase mt-0.5">Campus Pass Matrix</p>
-                            </div>
-                            <div class="w-8 h-8 bg-brandPrimary/10 rounded-lg flex items-center justify-center text-brandPrimary">
-                                <i data-lucide="graduation-cap" class="w-4.5 h-4.5"></i>
-                            </div>
-                        </div>
+    <div class="meta-row">
+      <span class="meta-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Bengaluru, India
+      </span>
+      <span class="meta-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <a href="tel:+919631585077">+91 96315 85077</a>
+      </span>
+      <span class="meta-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6 12 13 2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+        <a href="mailto:pniteshgupta@gmail.com">pniteshgupta@gmail.com</a>
+      </span>
+      <span class="meta-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </span>
+    </div>
+  </header>
 
-                        <div class="space-y-4 my-4 flex-1 flex flex-col justify-center">
-                            <div class="w-20 h-20 bg-slate-100 border border-slate-200 rounded-xl mx-auto flex items-center justify-center text-slate-400">
-                                <i data-lucide="user" class="w-8 h-8"></i>
-                            </div>
-                            <div class="text-center">
-                                <h5 id="modal-card-name" class="font-space font-bold text-sm text-slate-800">Katherine Vance</h5>
-                                <p id="modal-card-dept" class="text-[0.6rem] text-slate-400 uppercase font-semibold mt-0.5">STEM Division</p>
-                            </div>
-                        </div>
+  <!-- Experience: commit log -->
+  <section class="section" id="experience">
+    <div class="section-head">
+      <span class="hash">$</span>
+      <h2>git log --author=nitesh --stat</h2>
+      <span class="rule"></span>
+    </div>
 
-                        <div class="flex justify-between items-end border-t border-slate-100 pt-3 text-[0.55rem] font-mono text-slate-400">
-                            <div class="space-y-0.5 text-left">
-                                <p id="modal-card-id" class="font-bold text-slate-600">ID: NX-2026-4819</p>
-                                <p id="modal-card-year" class="uppercase text-[0.5rem]">Freshman (Y1)</p>
-                            </div>
-                            <span class="text-brandSuccess font-bold flex items-center gap-1">
-                                <span class="w-1.5 h-1.5 rounded-full bg-brandSuccess animate-pulse"></span> VALID
-                            </span>
-                        </div>
-                    </div>
+    <div class="log">
 
-                    <!-- BACK OF CARD -->
-                    <div class="absolute inset-0 w-full h-full bg-slate-50 border border-slate-200 shadow-xl rounded-2xl p-6 flex flex-col justify-between" style="backface-visibility: hidden; transform: rotateY(180deg);">
-                        <div class="text-center space-y-2 mt-4 border-b border-slate-100 pb-4">
-                            <p class="font-space text-[0.6rem] tracking-wider uppercase text-slate-500 font-bold">Systems Specialization</p>
-                            <p id="modal-card-extra" class="text-xs font-mono text-brandPrimary bg-brandPrimary/5 py-1 px-2.5 rounded-md">Deep Learning Architectures</p>
-                        </div>
-                        <div class="space-y-2 mb-4">
-                            <div class="w-full h-12 bg-[repeating-linear-gradient(90deg,transparent,transparent_4px,#1e293b_4px,#1e293b_8px)] opacity-60"></div>
-                            <p class="text-[0.5rem] text-center font-mono text-slate-400">ENCRYPTED BLOCKCHAIN MATRIX CHIP</p>
-                        </div>
-                        <p class="text-[0.5rem] text-slate-400 text-center uppercase tracking-widest font-extrabold">SECURE ACCESS</p>
-                    </div>
-
-                </div>
-            </div>
+      <div class="commit current">
+        <div class="commit-head">
+          <span class="commit-hash">a1e94c2</span>
+          <span class="commit-title">Senior Software Engineer</span>
         </div>
-    </div>
+        <div class="commit-sub"><span class="org">Xoriant Solution</span> · Bengaluru · Jun 2022 — Present</div>
 
-    <!-- ZEN REVEAL OVERLAY HUD BUTTON -->
-    <button id="btn-reveal-hud" onclick="toggleHUDVisibility()" class="fixed top-6 right-6 z-20 p-3 bg-brandPrimary hover:bg-brandPrimary/90 text-white font-extrabold rounded-xl shadow-xl transition-transform duration-300 scale-0 flex items-center gap-2 uppercase tracking-wider text-xs">
-        <i data-lucide="eye" class="w-4.5 h-4.5"></i>
-        <span>Return To Console</span>
-    </button>
-
-    <!-- INITIAL START LOADER DIALOG -->
-    <div id="boot-screen" class="fixed inset-0 bg-[#0f172a] flex flex-col items-center justify-center text-center p-6 z-50 transition-all duration-700">
-        <div class="max-w-md space-y-6">
-            <div class="w-16 h-16 bg-gradient-to-tr from-brandPrimary to-brandSuccess rounded-2xl mx-auto flex items-center justify-center shadow-2xl shadow-brandPrimary/20 animate-pulse">
-                <i data-lucide="graduation-cap" class="w-8 h-8 text-white stroke-[2]"></i>
-            </div>
-            <div class="space-y-2">
-                <h2 class="font-space text-2xl font-black tracking-widest text-white uppercase">NEXUS CORE V4.0</h2>
-                <p class="text-xs text-slate-400 max-w-sm leading-relaxed">
-                    SaaS-ready digital educational database layout compiled. Launching starts the full 3D campus models, schedules, timers, and active local storage registers.
-                </p>
-            </div>
-            <button onclick="igniteCampusApp()" class="px-8 py-3.5 bg-brandPrimary hover:bg-white text-white hover:text-[#0f172a] font-space font-extrabold text-xs rounded-xl tracking-widest transition-all duration-300 shadow-lg shadow-brandPrimary/20 uppercase">
-                LAUNCH CAMPUS PORTAL
-            </button>
+        <div class="diffline">
+          <span class="plus">+</span>
+          <span>Enhanced project performance for 5,000+ organization users using AngularJS, .NET MVC and MSSQL</span>
+          <span class="stat"><b>90%</b> faster</span>
         </div>
+        <div class="barwrap"><div class="bar" data-w="90"></div></div>
+
+        <div class="diffline">
+          <span class="plus">+</span>
+          <span>Migrated a 30-year-old codebase to .NET Core and Angular 13 for 10,000+ customers</span>
+          <span class="stat"><b>100%</b> gain</span>
+        </div>
+        <div class="barwrap"><div class="bar" data-w="100"></div></div>
+
+        <div class="diffline">
+          <span class="plus">+</span>
+          <span>Built 100+ project insight reports via an X-ray tool, presented to 1,000+ engineers and leadership</span>
+          <span class="stat">100+ projects</span>
+        </div>
+
+        <div class="diffline">
+          <span class="plus">+</span>
+          <span>Interlinked project views with Jira as a single platform, cutting manual tracking effort</span>
+          <span class="stat"><b>90%</b> less manual work</span>
+        </div>
+        <div class="barwrap"><div class="bar" data-w="90"></div></div>
+
+        <div class="diffline">
+          <span class="plus">+</span>
+          <span>Analyzed Pro Coverage metrics across case, lead and provider objects, pulling daily reports from 50,000 Jira records</span>
+          <span class="stat">50,000 records/day</span>
+        </div>
+      </div>
+
+      <div class="commit">
+        <div class="commit-head">
+          <span class="commit-hash">7d3f0aa</span>
+          <span class="commit-title">Product Developer</span>
+        </div>
+        <div class="commit-sub"><span class="org">Epicor Software</span> · Bengaluru · Aug 2020 — Jun 2022</div>
+
+        <div class="diffline">
+          <span class="plus">+</span>
+          <span>Shipped a core feature reducing enterprise application overhead, adopted by 1,000+ global customers</span>
+          <span class="stat"><b>15%</b> overhead cut</span>
+        </div>
+        <div class="barwrap"><div class="bar" data-w="15"></div></div>
+
+        <div class="diffline">
+          <span class="plus">+</span>
+          <span>Researched user trends to improve Job Management and pulled insights from existing data sources</span>
+          <span class="stat"><b>10%</b> satisfaction lift</span>
+        </div>
+        <div class="barwrap"><div class="bar" data-w="10"></div></div>
+
+        <div class="diffline">
+          <span class="plus">+</span>
+          <span>Built and improved job operations processes on .NET Core and PowerBuilder for manufacturing &amp; distribution ERP customers</span>
+          <span class="stat">500+ customers</span>
+        </div>
+      </div>
+
+      <div class="commit">
+        <div class="commit-head">
+          <span class="commit-hash">51c88e1</span>
+          <span class="commit-title">Software Engineer</span>
+        </div>
+        <div class="commit-sub"><span class="org">Antworks</span> · Bengaluru · Dec 2019 — Apr 2020</div>
+
+        <div class="diffline">
+          <span class="plus">+</span>
+          <span>Integrated core components of a .NET automation tool for digital workforce management, used by 300+ global customers</span>
+          <span class="stat">300+ customers</span>
+        </div>
+
+        <div class="diffline">
+          <span class="plus">+</span>
+          <span>Added a centralized scheduling algorithm, smoothing task automation across processes</span>
+          <span class="stat"><b>35%</b> more efficient</span>
+        </div>
+        <div class="barwrap"><div class="bar" data-w="35"></div></div>
+      </div>
+
+      <div class="commit">
+        <div class="commit-head">
+          <span class="commit-hash">2f60b7d</span>
+          <span class="commit-title">Software Engineer</span>
+        </div>
+        <div class="commit-sub"><span class="org">Happiest Minds</span> · Bengaluru · Jul 2018 — Nov 2019</div>
+
+        <div class="diffline">
+          <span class="plus">+</span>
+          <span>Built a core .NET Core Web API + Angular app surfacing device and site details for 80+ remote UPS sites</span>
+          <span class="stat">80+ sites</span>
+        </div>
+
+        <div class="diffline">
+          <span class="plus">+</span>
+          <span>Delivered access control across devices and locations for Eaton's Power Management System</span>
+          <span class="stat">900+ users</span>
+        </div>
+
+        <div class="diffline">
+          <span class="plus">+</span>
+          <span>Mapped a new Ireland locale into McAfee's core product via XML and DB scripting in .NET</span>
+          <span class="stat">10M users</span>
+        </div>
+      </div>
+
+      <div class="commit">
+        <div class="commit-head">
+          <span class="commit-hash">9a2e441</span>
+          <span class="commit-title">Software Engineer</span>
+        </div>
+        <div class="commit-sub"><span class="org">G7CR Technologies</span> · Bengaluru · Nov 2017 — Jul 2018</div>
+
+        <div class="diffline">
+          <span class="plus">+</span>
+          <span>Built quality-check components with MVC, C#, HTML5, CSS3, jQuery and MS SQL against defined employee parameters</span>
+          <span class="stat">—</span>
+        </div>
+
+        <div class="diffline">
+          <span class="plus">+</span>
+          <span>Reviewed an in-house project application and improved code efficiency</span>
+          <span class="stat"><b>10%</b>+ efficiency</span>
+        </div>
+        <div class="barwrap"><div class="bar" data-w="10"></div></div>
+      </div>
+
+      <div class="commit">
+        <div class="commit-head">
+          <span class="commit-hash">0c11ffa</span>
+          <span class="commit-title">Web Intern</span>
+        </div>
+        <div class="commit-sub"><span class="org">Zura Technologies</span> · Bengaluru · Jan 2017 — Jul 2017</div>
+
+        <div class="diffline">
+          <span class="plus">+</span>
+          <span>Learned HTML5, CSS3, JavaScript and Angular building KHAANAMAN, a food-delivery site</span>
+          <span class="stat">—</span>
+        </div>
+
+        <div class="diffline">
+          <span class="plus">+</span>
+          <span>Upgraded KHAANAMAN's ordering flow and reshaped its database for a better user experience</span>
+          <span class="stat">1,000+ users</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Skills: stack.json -->
+  <section class="section" id="skills">
+    <div class="section-head">
+      <span class="hash">$</span>
+      <h2>cat stack.json</h2>
+      <span class="rule"></span>
+    </div>
+    <pre class="stackblock"><span class="punc">{</span>
+  <span class="key">"languages"</span><span class="punc">:</span> [<span class="str">"C#"</span><span class="punc">,</span> <span class="str">"SQL"</span>]<span class="punc">,</span>
+  <span class="key">"backend"</span><span class="punc">:</span> [<span class="str">".NET Core"</span><span class="punc">,</span> <span class="str">"MVC"</span><span class="punc">,</span> <span class="str">"Web API"</span>]<span class="punc">,</span>
+  <span class="key">"frontend"</span><span class="punc">:</span> [<span class="str">"Angular 6"</span><span class="punc">,</span> <span class="str">"jQuery"</span>]<span class="punc">,</span>
+  <span class="key">"platform"</span><span class="punc">:</span> [<span class="str">"Azure DevOps"</span><span class="punc">,</span> <span class="str">"Jenkins"</span>]<span class="punc">,</span>
+  <span class="key">"data"</span><span class="punc">:</span> [<span class="str">"Data Structures &amp; Algorithms"</span><span class="punc">,</span> <span class="str">"Tableau"</span>]<span class="punc">,</span>
+  <span class="key">"versionControl"</span><span class="punc">:</span> [<span class="str">"GIT"</span><span class="punc">,</span> <span class="str">"SVN"</span>]<span class="punc">,</span>
+  <span class="key">"tracking"</span><span class="punc">:</span> [<span class="str">"JIRA"</span>]  <span class="comment">// 50,000+ records triaged daily</span>
+<span class="punc">}</span></pre>
+  </section>
+
+  <!-- Leadership + Education -->
+  <section class="section">
+    <div class="section-head">
+      <span class="hash">$</span>
+      <h2>tags &amp; releases</h2>
+      <span class="rule"></span>
     </div>
 
-    <!-- Three.js + OrbitControls Engine Integration -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script>
-        lucide.createIcons();
+    <div class="grid2">
+      <div class="card">
+        <h3>Leadership &amp; Awards</h3>
+        <div class="tagitem">
+          <span class="tag-pill">lead</span>
+          <span>Coordinator head for a Digital India test administered to 2,000+ students, Nov 2017</span>
+        </div>
+        <div class="tagitem">
+          <span class="tag-pill">win ×2</span>
+          <span>Hackathon winner — Digital Blood Bank and Music Juke Box</span>
+        </div>
+        <div class="tagitem">
+          <span class="tag-pill">award</span>
+          <span>Team Excellence Award, 23 Jan 2019</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Education</h3>
+        <div class="edu-degree">Master in Computer Applications</div>
+        <div class="edu-school">BIT Mesra, Ranchi — Ranchi, India</div>
+        <div class="edu-score">graduated 2017 · 78.8%</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>nitesh-gupta/dotnet-fullstack-developer</span>
+    <span>Bengaluru, India</span>
+  </footer>
+
+</div>
+
+<script>
+  // Reveal commits in sequence, animate diff bars once visible.
+  const commits = document.querySelectorAll('.commit');
+  commits.forEach((c, i) => { c.style.animationDelay = (i * 0.06) + 's'; });
+
+  const bars = document.querySelectorAll('.bar');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        el.style.width = el.dataset.w + '%';
+        io.unobserve(el);
+      }
+    });
+  }, { threshold: 0.4 });
+  bars.forEach(b => io.observe(b));
+</script>
 
-        /* =========================================================================
-           STATE MACHINE WITH AUTOMATIC LOCAL STORAGE SYNCHRONIZATION
-           ========================================================================= */
-        const DEFAULT_STATE = {
-            students: [
-                { id: "NX-2026-1021", name: "Athena Thorne", dept: "STEM Division", year: "Senior (Y4)", extra: "Quantum Mechanics" },
-                { id: "NX-2026-4832", name: "Katherine Vance", dept: "Fine Arts", year: "Sophomore (Y2)", extra: "Generative Sculpting" },
-                { id: "NX-2026-8941", name: "Aline Thorne", dept: "Humanities", year: "Junior (Y3)", extra: "AI Ethics & Philosophy" }
-            ],
-            teachers: [
-                { name: "Prof. Serena Thorne", dept: "STEM", role: "Quantum Cryptography Specialist", hours: "Mon / Wed" },
-                { name: "Dr. Gideon Vance", dept: "STEM", role: "Astrophysics Lab Lead", hours: "Tue / Thu" },
-                { name: "Dean Michael Vance", dept: "Humanities", role: "Chairperson of Classical Philosophy", hours: "Fri Only" }
-            ],
-            classes: [
-                { title: "Quantum Cryptography & Algorithms", dept: "STEM", room: "STEM Wing A", time: "09:00 - 10:30", teacher: "Prof. Serena Thorne" },
-                { title: "Observational Astrophysics", dept: "STEM", room: "Dome Pod B", time: "11:00 - 12:30", teacher: "Dr. Gideon Vance" },
-                { title: "Societal AI Ethics & Policy", dept: "Humanities", room: "Monolith Ring 2", time: "14:00 - 15:30", teacher: "Dean Michael Vance" }
-            ],
-            grades: [
-                { studentName: "Athena Thorne", exam: "PHYSICS", score: "100%", status: "PASSED" }
-            ],
-            tasks: [
-                { id: "tsk-1", text: "Verify mid-term testing center safety protocols", completed: true },
-                { id: "tsk-2", text: "Audit new student registration matrices", completed: false },
-                { id: "tsk-3", text: "Approve operational budgets for STEM complex drone projects", completed: false }
-            ],
-            bookings: [],
-            logs: [
-                { text: "Campus core system database loaded successfully.", time: "10:14:00" }
-            ]
-        };
-
-        let state = JSON.parse(localStorage.getItem('nexus_campus_db')) || DEFAULT_STATE;
-
-        function saveState() {
-            localStorage.setItem('nexus_campus_db', JSON.stringify(state));
-            updateDashboardMetrics();
-        }
-
-        function resetLocalDatabase() {
-            if (confirm("Are you sure you want to reset the state database to default mock values? This will erase all custom added students, classes, faculty, and grades.")) {
-                state = DEFAULT_STATE;
-                saveState();
-                logEvent("Database reset completed by administrative mandate.");
-                
-                // Redraw UI sections
-                drawStudentRegistryTable();
-                drawClassRoster();
-                drawGradesLedger();
-                drawTasks();
-                drawFacultyDirectory();
-                drawConsultationBookings();
-                
-                playAudioTrigger('fail');
-            }
-        }
-
-        function logEvent(msg) {
-            const now = new Date();
-            const timeStr = now.toTimeString().split(' ')[0];
-            state.logs.unshift({ text: msg, time: timeStr });
-            if (state.logs.length > 20) state.logs.pop();
-            saveState();
-            drawActivityLogs();
-        }
-
-        /* =========================================================================
-           THREE.JS SCENE CONFIGURATION (Lush Sunny Daylight Theme)
-           ========================================================================= */
-        const container = document.getElementById('canvas-container');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-        
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        container.appendChild(renderer.domElement);
-
-        // Daylighting Setup
-        const hemisphereLight = new THREE.HemisphereLight(0xe0f2fe, 0x0f172a, 0.65);
-        scene.add(hemisphereLight);
-
-        const sunLight = new THREE.DirectionalLight(0xfffaed, 1.4);
-        sunLight.position.set(20, 30, 20);
-        sunLight.castShadow = true;
-        sunLight.shadow.mapSize.width = 1024;
-        sunLight.shadow.mapSize.height = 1024;
-        sunLight.shadow.bias = -0.0003;
-        scene.add(sunLight);
-
-        const ambientFill = new THREE.AmbientLight(0xffffff, 0.25);
-        scene.add(ambientFill);
-
-        // Soft spotlight focusing active sectors [2]
-        const sectorSpotlight = new THREE.SpotLight(0x3b82f6, 4.0, 25, Math.PI / 4, 0.5, 1);
-        sectorSpotlight.position.set(0, 15, 0);
-        scene.add(sectorSpotlight);
-
-        scene.background = new THREE.Color(0xf1f5f9);
-
-        // Controls
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
-        controls.minDistance = 4;
-        controls.maxDistance = 45;
-        controls.target.set(0, 1.5, 0);
-
-        /* =========================================================================
-           PROCEDURAL ARCHITECTURAL MODEL (Real school campus setup) [1]
-           ========================================================================= */
-        const campusGroup = new THREE.Group();
-        scene.add(campusGroup);
-
-        // Grass Base Plate
-        const lawnGeom = new THREE.PlaneGeometry(50, 50);
-        lawnGeom.rotateX(-Math.PI / 2);
-        const lawnMat = new THREE.MeshStandardMaterial({ color: 0x86efac, roughness: 0.9, metalness: 0.1 });
-        const lawnMesh = new THREE.Mesh(lawnGeom, lawnMat);
-        lawnMesh.receiveShadow = true;
-        campusGroup.add(lawnMesh);
-
-        // Stone-Grey Pathways Network
-        const roadGeom = new THREE.BoxGeometry(4.0, 0.02, 35.0);
-        const roadMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.8 });
-        
-        const roadNS = new THREE.Mesh(roadGeom, roadMat);
-        roadNS.position.set(0, 0.01, 0);
-        roadNS.receiveShadow = true;
-        campusGroup.add(roadNS);
-
-        const roadEW = new THREE.Mesh(new THREE.BoxGeometry(35.0, 0.02, 4.0), roadMat);
-        roadEW.position.set(0, 0.01, 0);
-        roadEW.receiveShadow = true;
-        campusGroup.add(roadEW);
-
-        // Standard materials for campus architecture
-        const campusMaterials = {
-            stoneWall: new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.7, metalness: 0.2 }),
-            brickWall: new THREE.MeshStandardMaterial({ color: 0xca8a04, roughness: 0.8, metalness: 0.1 }),
-            cherryWood: new THREE.MeshStandardMaterial({ color: 0xb45309, roughness: 0.75 }),
-            glassTinted: new THREE.MeshStandardMaterial({ color: 0x3b82f6, roughness: 0.1, metalness: 0.9, transparent: true, opacity: 0.7 }),
-            trunk: new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.9 }),
-            foliage: new THREE.MeshStandardMaterial({ color: 0x22c55e, roughness: 0.8 })
-        };
-
-        // Building Quadrants Setup [1, 2]
-        // 1. Central Admin Spire (Coordinates 0, 0, 0)
-        const mainTowerGroup = new THREE.Group();
-        campusGroup.add(mainTowerGroup);
-
-        const adminBase = new THREE.Mesh(new THREE.BoxGeometry(3.0, 6.5, 3.0), campusMaterials.stoneWall);
-        adminBase.position.y = 3.25;
-        adminBase.castShadow = true;
-        adminBase.receiveShadow = true;
-        mainTowerGroup.add(adminBase);
-
-        // Add Multi-story Rows of Glass Windows
-        const winGeom = new THREE.BoxGeometry(0.4, 0.8, 3.1);
-        for(let y = 1.2; y < 6.5; y += 1.5) {
-            for(let x = -0.8; x <= 0.8; x += 0.8) {
-                const win = new THREE.Mesh(winGeom, campusMaterials.glassTinted);
-                win.position.set(x, y, 0);
-                mainTowerGroup.add(win);
-            }
-        }
-
-        // 2. STEM Science Complex (Circular Pavilion - Northwest corner: -8, -8)
-        const scienceGroup = new THREE.Group();
-        scienceGroup.position.set(-8.0, 0, -8.0);
-        campusGroup.add(scienceGroup);
-
-        const scienceBase = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 2.5, 3.5, 32), campusMaterials.stoneWall);
-        scienceBase.position.y = 1.75;
-        scienceBase.castShadow = true;
-        scienceBase.receiveShadow = true;
-        scienceGroup.add(scienceBase);
-
-        const scienceDome = new THREE.Mesh(new THREE.SphereGeometry(1.8, 16, 16, 0, Math.PI*2, 0, Math.PI/2), campusMaterials.glassTinted);
-        scienceDome.position.y = 3.5;
-        scienceGroup.add(scienceDome);
-
-        // 3. Exam Dome & Classical Lecture Hall (Brick architectural mockup - Southeast corner: 8, 8)
-        const examGroup = new THREE.Group();
-        examGroup.position.set(8.0, 0, 8.0);
-        campusGroup.add(examGroup);
-
-        const examBase = new THREE.Mesh(new THREE.BoxGeometry(4.0, 2.8, 4.0), campusMaterials.brickWall);
-        examBase.position.y = 1.4;
-        examBase.castShadow = true;
-        examBase.receiveShadow = true;
-        examGroup.add(examBase);
-
-        const examRoof = new THREE.Mesh(new THREE.ConeGeometry(3.0, 1.8, 4), campusMaterials.stoneWall);
-        examRoof.rotation.y = Math.PI / 4;
-        examRoof.position.y = 3.7;
-        examGroup.add(examRoof);
-
-        // 4. NEW: Faculty Lodge / Humanities Center (Northeast corner: 8, -8)
-        const facultyLodgeGroup = new THREE.Group();
-        facultyLodgeGroup.position.set(8.0, 0, -8.0);
-        campusGroup.add(facultyLodgeGroup);
-
-        const lodgeBase = new THREE.Mesh(new THREE.BoxGeometry(3.5, 3.0, 3.5), campusMaterials.cherryWood);
-        lodgeBase.position.y = 1.5;
-        lodgeBase.castShadow = true;
-        lodgeBase.receiveShadow = true;
-        facultyLodgeGroup.add(lodgeBase);
-
-        const lodgeRoof = new THREE.Mesh(new THREE.ConeGeometry(2.8, 1.5, 4), campusMaterials.stoneWall);
-        lodgeRoof.rotation.y = Math.PI / 4;
-        lodgeRoof.position.y = 3.7;
-        facultyLodgeGroup.add(lodgeRoof);
-
-        // Procedural Landscape Trees
-        function plantCampusTree(x, z) {
-            const tree = new THREE.Group();
-            tree.position.set(x, 0, z);
-
-            const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.18, 1.2, 8), campusMaterials.trunk);
-            trunk.position.y = 0.6;
-            trunk.castShadow = true;
-            tree.add(trunk);
-
-            const leaves = new THREE.Mesh(new THREE.SphereGeometry(0.65, 8, 8), campusMaterials.foliage);
-            leaves.position.y = 1.4;
-            leaves.castShadow = true;
-            tree.add(leaves);
-
-            campusGroup.add(tree);
-        }
-
-        // Populate dynamic campus trees
-        plantCampusTree(-4.5, 3.0);
-        plantCampusTree(-4.5, -3.0);
-        plantCampusTree(4.5, 3.0);
-        plantCampusTree(4.5, -3.0);
-        plantCampusTree(-3.0, 4.5);
-        plantCampusTree(3.0, 4.5);
-
-        // Sparkling Center Fountain
-        const fountainPool = new THREE.Mesh(new THREE.TorusGeometry(1.4, 0.15, 8, 32), campusMaterials.stoneWall);
-        fountainPool.rotateX(Math.PI / 2);
-        fountainPool.position.set(0, 0.08, 0);
-        campusGroup.add(fountainPool);
-
-        const waterPlane = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 0.1, 16), campusMaterials.glassTinted);
-        waterPlane.position.set(0, 0.05, 0);
-        campusGroup.add(waterPlane);
-
-        /* =========================================================================
-           WEB AUDIO SYNTH ENGINE
-           ========================================================================= */
-        let audioCtx = null;
-        let soundOn = false;
-
-        function toggleSoundEngine() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            const icon = document.getElementById('sound-icon');
-            soundOn = !soundOn;
-
-            if (soundOn) {
-                audioCtx.resume();
-                icon.setAttribute('data-lucide', 'volume-2');
-                icon.nextElementSibling.textContent = "Chime On";
-            } else {
-                icon.setAttribute('data-lucide', 'volume-x');
-                icon.nextElementSibling.textContent = "Chime Muted";
-            }
-            lucide.createIcons();
-            playAudioTrigger('ping');
-        }
-
-        function playAudioTrigger(type) {
-            if (!soundOn || !audioCtx) return;
-            const osc = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-
-            osc.type = 'sine';
-            if (type === 'ping') {
-                osc.frequency.setValueAtTime(440, audioCtx.currentTime); // A4
-                osc.frequency.exponentialRampToValueAtTime(554.37, audioCtx.currentTime + 0.1); // C#5
-            } else if (type === 'success') {
-                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
-                osc.frequency.exponentialRampToValueAtTime(659.25, audioCtx.currentTime + 0.15); // E5
-            } else if (type === 'fail') {
-                osc.frequency.setValueAtTime(293.66, audioCtx.currentTime); // D4
-                osc.frequency.linearRampToValueAtTime(146.83, audioCtx.currentTime + 0.22); // D3
-            } else {
-                osc.frequency.setValueAtTime(349.23, audioCtx.currentTime); // F4
-                osc.frequency.linearRampToValueAtTime(174.61, audioCtx.currentTime + 0.15); // F3
-            }
-
-            gainNode.gain.setValueAtTime(0.04, audioCtx.currentTime);
-            gainNode.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.22);
-
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.22);
-        }
-
-        /* =========================================================================
-           SPA ROUTER & DEP DIRECTOR [1, 2]
-           ========================================================================= */
-        let targetCamPos = new THREE.Vector3(15, 12, 18);
-        let currentCamPos = new THREE.Vector3(15, 12, 18);
-
-        let targetLookAt = new THREE.Vector3(0, 1.5, 0);
-        let currentLookAt = new THREE.Vector3(0, 1.5, 0);
-
-        function switchTab(tabId) {
-            activeTab = tabId;
-            playAudioTrigger('ping');
-
-            // Toggle active sidebar highlight
-            document.querySelectorAll('nav button').forEach(btn => {
-                btn.className = "w-full py-3 px-4 rounded-xl text-xs font-semibold text-slate-500 hover:text-brandPrimary hover:bg-slate-50 transition flex items-center gap-3";
-            });
-            document.getElementById(`btn-tab-${tabId}`).classList.add('sidebar-btn-active');
-
-            // Render selected page
-            document.querySelectorAll('.page-section').forEach(page => {
-                page.classList.add('hidden');
-            });
-            document.getElementById(`page-${tabId}`).classList.remove('hidden');
-
-            // Scroll container back to top
-            document.getElementById('panel-scroll-container').scrollTop = 0;
-
-            // Direct 3D camera autopilot to focal coordinates [1, 2]
-            if (tabId === 'classes') {
-                targetCamPos.set(-10, 4.0, -5);
-                targetLookAt.set(-8.0, 1.75, -8.0);
-                sectorSpotlight.position.set(-8.0, 8.0, -8.0);
-                sectorSpotlight.target = scienceBase;
-                document.getElementById('lbl-sector-focus').textContent = "Active Sector: STEM Complex";
-                document.getElementById('header-context-title').textContent = "Curriculums & Class Timetables";
-            } else if (tabId === 'teachers') {
-                targetCamPos.set(10, 4.0, -10);
-                targetLookAt.set(8.0, 1.5, -8.0);
-                sectorSpotlight.position.set(8.0, 8.0, -8.0);
-                sectorSpotlight.target = lodgeBase;
-                document.getElementById('lbl-sector-focus').textContent = "Active Sector: Faculty Lodge";
-                document.getElementById('header-context-title').textContent = "Academic Staff & Consultation Board";
-            } else if (tabId === 'exams') {
-                targetCamPos.set(4.0, 3.5, 12.0);
-                targetLookAt.set(8.0, 1.4, 8.0);
-                sectorSpotlight.position.set(8.0, 8.0, 8.0);
-                sectorSpotlight.target = examBase;
-                document.getElementById('lbl-sector-focus').textContent = "Active Sector: Exam Dome";
-                document.getElementById('header-context-title').textContent = "LMS Testing Terminals";
-            } else if (tabId === 'admission') {
-                targetCamPos.set(4.5, 4.0, 4.5);
-                targetLookAt.set(0, 3.0, 0);
-                sectorSpotlight.position.set(0, 8.0, 0);
-                sectorSpotlight.target = adminBase;
-                document.getElementById('lbl-sector-focus').textContent = "Active Sector: Administration Tower";
-                document.getElementById('header-context-title').textContent = "Admissions Office";
-            } else { // overview / dashboard
-                targetCamPos.set(15, 12, 18);
-                targetLookAt.set(0, 1.5, 0);
-                sectorSpotlight.position.set(0, 12.0, 0);
-                document.getElementById('lbl-sector-focus').textContent = "Active Sector: Campus Quadrant";
-                document.getElementById('header-context-title').textContent = "Campus Dashboard Hub";
-            }
-        }
-
-        /* =========================================================================
-           STATE RENDERING TRIGGERS (The "Reactive" Engine UI mappings)
-           ========================================================================= */
-        function updateDashboardMetrics() {
-            // Student KPI
-            document.getElementById('stat-students').textContent = state.students.length.toLocaleString();
-            
-            // Faculty KPI
-            document.getElementById('stat-teachers').textContent = state.teachers.length.toString();
-            const ratio = state.students.length > 0 ? (state.students.length / state.teachers.length).toFixed(1) : "0";
-            document.getElementById('stat-faculty-ratio').textContent = `Faculty Ratio 1:${ratio}`;
-
-            // Exams KPIs
-            const passCount = state.grades.filter(g => g.status === 'PASSED').length;
-            const totalExams = state.grades.length;
-            document.getElementById('stat-exams-taken').textContent = `${totalExams} Exams Logged`;
-            
-            const avgPct = totalExams > 0 ? Math.round((passCount / totalExams) * 100) : 0;
-            document.getElementById('stat-average-grade').textContent = `${avgPct}%`;
-            document.getElementById('bar-average-grade').style.width = `${avgPct}%`;
-        }
-
-        // 1. Dashboard Module - Tasks & Logger
-        function handleAddTask(e) {
-            e.preventDefault();
-            const textInput = document.getElementById('input-task-text');
-            const newTask = {
-                id: 'tsk-' + Date.now(),
-                text: textInput.value,
-                completed: false
-            };
-            state.tasks.push(newTask);
-            textInput.value = '';
-            logEvent(`Task added: "${newTask.text}"`);
-            drawTasks();
-        }
-
-        function toggleTask(id) {
-            const task = state.tasks.find(t => t.id === id);
-            if (task) {
-                task.completed = !task.completed;
-                logEvent(`Task status toggled: "${task.text}"`);
-                drawTasks();
-            }
-        }
-
-        function deleteTask(id) {
-            const task = state.tasks.find(t => t.id === id);
-            if (task) {
-                state.tasks = state.tasks.filter(t => t.id !== id);
-                logEvent(`Task deleted: "${task.text}"`);
-                drawTasks();
-            }
-        }
-
-        function drawTasks() {
-            const container = document.getElementById('dashboard-tasks-container');
-            container.innerHTML = '';
-            if (state.tasks.length === 0) {
-                container.innerHTML = `<p class="text-slate-400 italic text-center py-2">No active tasks logged on board.</p>`;
-                return;
-            }
-            state.tasks.forEach(task => {
-                container.innerHTML += `
-                    <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200/60 rounded-xl hover:shadow-sm transition">
-                        <div class="flex items-center gap-3">
-                            <input type="checkbox" onchange="toggleTask('${task.id}')" ${task.completed ? 'checked' : ''} class="w-4.5 h-4.5 text-brandPrimary border-slate-300 rounded focus:ring-brandPrimary">
-                            <span class="${task.completed ? 'line-through text-slate-400 font-medium' : 'text-slate-600 font-semibold'}">${task.text}</span>
-                        </div>
-                        <button onclick="deleteTask('${task.id}')" class="p-1 hover:bg-slate-100 rounded text-slate-400 hover:text-brandDanger transition">
-                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                `;
-            });
-            lucide.createIcons();
-        }
-
-        function drawActivityLogs() {
-            const container = document.getElementById('activity-log-feed');
-            container.innerHTML = '';
-            state.logs.forEach(log => {
-                container.innerHTML += `
-                    <div class="p-3 bg-slate-50 hover:bg-slate-100/80 rounded-xl border border-slate-100/50 flex justify-between items-center text-xs">
-                        <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-slate-400 animate-pulse"></span>
-                            <span class="text-slate-600 font-medium">${log.text}</span>
-                        </div>
-                        <span class="text-[0.65rem] font-bold text-slate-400">${log.time}</span>
-                    </div>
-                `;
-            });
-        }
-
-        // 2. Admissions Module
-        function handleAdmissionsSubmit(e) {
-            e.preventDefault();
-            const name = document.getElementById('student-name');
-            const dept = document.getElementById('student-dept');
-            const year = document.getElementById('student-year');
-            const extra = document.getElementById('student-extra');
-
-            const newStudent = {
-                id: `NX-2026-${Math.floor(1000 + Math.random() * 9000)}`,
-                name: name.value,
-                dept: dept.value,
-                year: year.value,
-                extra: extra.value
-            };
-
-            state.students.push(newStudent);
-            
-            // Clear fields
-            name.value = '';
-            extra.value = '';
-
-            logEvent(`Student matriculation approved: ${newStudent.name} (${newStudent.id})`);
-            playAudioTrigger('success');
-            
-            // Update UI elements
-            drawStudentRegistryTable();
-            populateStudentDropdown();
-            
-            // Focus backdrop on Admin monolith [1, 2]
-            targetCamPos.set(4.5, 4.0, 4.5);
-            targetLookAt.set(0, 3.0, 0);
-
-            // Pop open View Badge Modal for immediate confirmation
-            inspectStudentBadge(newStudent.id);
-        }
-
-        function deleteStudent(id) {
-            const s = state.students.find(st => st.id === id);
-            if (s) {
-                state.students = state.students.filter(st => st.id !== id);
-                logEvent(`Student body credentials revoked: ${s.name} (${s.id})`);
-                playAudioTrigger('fail');
-                drawStudentRegistryTable();
-                populateStudentDropdown();
-            }
-        }
-
-        function drawStudentRegistryTable() {
-            const tbody = document.getElementById('student-table-body');
-            const searchQuery = document.getElementById('search-student').value.toLowerCase();
-            tbody.innerHTML = '';
-
-            const filtered = state.students.filter(s => 
-                s.name.toLowerCase().includes(searchQuery) || 
-                s.id.toLowerCase().includes(searchQuery) ||
-                s.dept.toLowerCase().includes(searchQuery)
-            );
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="px-4 py-6 text-slate-400 italic text-center">No student files match query parameters.</td></tr>`;
-                return;
-            }
-
-            filtered.forEach(s => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="px-4 py-3 font-semibold text-slate-700">${s.name}</td>
-                        <td class="px-4 py-3 text-slate-500 font-medium">${s.dept}</td>
-                        <td class="px-4 py-3 font-mono text-slate-400 font-bold">${s.id}</td>
-                        <td class="px-4 py-3 text-right space-x-1.5 whitespace-nowrap">
-                            <button onclick="inspectStudentBadge('${s.id}')" class="px-2.5 py-1 bg-brandPrimary/10 hover:bg-brandPrimary hover:text-white text-brandPrimary rounded text-[0.65rem] font-bold uppercase transition">
-                                View Badge
-                            </button>
-                            <button onclick="deleteStudent('${s.id}')" class="px-2.5 py-1 bg-red-50 hover:bg-brandDanger hover:text-white text-brandDanger rounded text-[0.65rem] font-bold uppercase transition">
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        // ID badge inspector logic
-        function inspectStudentBadge(id) {
-            const s = state.students.find(st => st.id === id);
-            if (s) {
-                playAudioTrigger('ping');
-                document.getElementById('modal-card-name').textContent = s.name;
-                document.getElementById('modal-card-dept').textContent = s.dept;
-                document.getElementById('modal-card-year').textContent = s.year;
-                document.getElementById('modal-card-id').textContent = `ID: ${s.id}`;
-                document.getElementById('modal-card-extra').textContent = s.extra;
-
-                const modal = document.getElementById('badge-modal');
-                modal.classList.remove('opacity-0', 'pointer-events-none');
-            }
-        }
-
-        function closeBadgeModal() {
-            document.getElementById('badge-modal').classList.add('opacity-0', 'pointer-events-none');
-            document.getElementById('badge-rotator').classList.remove('card-flipped');
-        }
-
-        function toggleIDBadgeFlip() {
-            playAudioTrigger('ping');
-            document.getElementById('badge-rotator').classList.toggle('card-flipped');
-        }
-
-        // 3. Syllabus Schedules Module
-        function handleCreateClass(e) {
-            e.preventDefault();
-            const title = document.getElementById('class-title');
-            const teacher = document.getElementById('class-teacher-select');
-            const room = document.getElementById('class-room');
-            const dept = document.getElementById('class-dept');
-            const time = document.getElementById('class-time');
-
-            const newClass = {
-                title: title.value,
-                teacher: teacher.value,
-                room: room.options[room.selectedIndex].text,
-                dept: dept.value,
-                time: time.value,
-                focusKey: room.value === 'STEM Wing A' ? 'science' : (room.value === 'Lodge Suite C' ? 'lodge' : 'admin')
-            };
-
-            state.classes.push(newClass);
-            title.value = '';
-            time.value = '';
-
-            logEvent(`New lecture slot booked: "${newClass.title}" by ${newClass.teacher}`);
-            playAudioTrigger('success');
-            drawClassRoster();
-        }
-
-        function selectTimetableBlock(focusKey) {
-            playAudioTrigger('ping');
-            if (focusKey === 'science') {
-                targetCamPos.set(-10, 4.0, -5);
-                targetLookAt.set(-8.0, 1.75, -8.0);
-                structureSpotlight.position.set(-8.0, 8.0, -8.0);
-                structureSpotlight.target = scienceBase;
-                document.getElementById('lbl-sector-focus').textContent = "Active Sector: STEM Complex";
-            } else if (focusKey === 'lodge') {
-                targetCamPos.set(10, 4.0, -10);
-                targetLookAt.set(8.0, 1.5, -8.0);
-                sectorSpotlight.position.set(8.0, 8.0, -8.0);
-                sectorSpotlight.target = lodgeBase;
-                document.getElementById('lbl-sector-focus').textContent = "Active Sector: Faculty Lodge";
-            } else {
-                targetCamPos.set(4.5, 4.0, 4.5);
-                targetLookAt.set(0, 3.0, 0);
-                sectorSpotlight.position.set(0, 8.0, 0);
-                sectorSpotlight.target = adminBase;
-                document.getElementById('lbl-sector-focus').textContent = "Active Sector: Administration Tower";
-            }
-        }
-
-        function drawClassRoster() {
-            const list = document.getElementById('classes-schedule-list');
-            list.innerHTML = '';
-            
-            state.classes.forEach(cls => {
-                const badgeColor = cls.dept === 'STEM' ? 'bg-brandPrimary/10 text-brandPrimary' : 'bg-emerald-500/10 text-emerald-600';
-                list.innerHTML += `
-                    <div onclick="selectTimetableBlock('${cls.focusKey || 'science'}')" class="p-4 bg-slate-50/50 hover:bg-brandPrimary/5 border border-slate-200/60 hover:border-brandPrimary/30 rounded-xl transition cursor-pointer flex justify-between items-center group">
-                        <div class="space-y-1">
-                            <span class="${badgeColor} text-[0.55rem] font-bold px-2 py-0.5 rounded uppercase font-mono">${cls.time} // ${cls.room}</span>
-                            <h4 class="text-xs font-bold text-slate-800 group-hover:text-brandPrimary transition">${cls.title}</h4>
-                            <p class="text-[0.65rem] text-slate-500">${cls.teacher} // Department of ${cls.dept}</p>
-                        </div>
-                        <div class="p-2.5 bg-white border border-slate-100 rounded-lg text-slate-400 group-hover:text-brandPrimary transition">
-                            <i data-lucide="calendar" class="w-4.5 h-4.5"></i>
-                        </div>
-                    </div>
-                `;
-            });
-            lucide.createIcons();
-        }
-
-        // 4. Exams LMS Module
-        function populateStudentDropdown() {
-            const select = document.getElementById('exam-student-select');
-            select.innerHTML = '';
-            if (state.students.length === 0) {
-                select.innerHTML = `<option value="">No Active Student Body Registered</option>`;
-                return;
-            }
-            state.students.forEach(st => {
-                select.innerHTML += `<option value="${st.name}">${st.name} (${st.id})</option>`;
-            });
-        }
-
-        const lmsDatabase = {
-            physics: [
-                { q: "What subatomic particle configuration is utilized inside superconducting quantum computers?", a: ["Cooper Pairs", "Tachyon Beams", "Lepton Vectors", "Higgs bosons"], correct: 0 },
-                { q: "What physical metric represents Planck's localized length constant?", a: ["1.6 x 10^-35 meters", "4.2 x 10^-12 meters", "9.1 x 10^-25 meters", "0.0 meters"], correct: 0 }
-            ],
-            math: [
-                { q: "Which complex class covers problems solvable in polynomial time?", a: ["P-Space Constant", "NP-Complete Matrix", "NP Complexity Class", "P Complexity Class"], correct: 3 },
-                { q: "What network mechanism maps a continuous graph traversal visiting each node exactly once?", a: ["Hamiltonian Path", "Eulerian Ring", "Dijkstra Traversal", "Fibonacci Lattice"], correct: 0 }
-            ]
-        };
-
-        let currentActiveExamSubject = 'physics';
-        let currentQuestionIndex = 0;
-        let currentExamCandidate = '';
-        let currentExamScore = 0;
-        let examTimerSeconds = 30;
-        let examTimerInterval = null;
-
-        function launchAcademicExam() {
-            const studentSelect = document.getElementById('exam-student-select');
-            if (state.students.length === 0 || !studentSelect.value) {
-                alert("Cannot initialize exam terminal. Please matriculate and register at least one student in the Admissions portal first.");
-                return;
-            }
-
-            playAudioTrigger('ping');
-            currentExamCandidate = studentSelect.value;
-            currentActiveExamSubject = document.getElementById('exam-select-target').value;
-            currentQuestionIndex = 0;
-            currentExamScore = 0;
-
-            document.getElementById('exam-launcher-block').classList.add('hidden');
-            document.getElementById('exam-quiz-board').classList.remove('hidden');
-
-            // Autopilot focus onto Exam dome wing [1, 2]
-            targetCamPos.set(4.0, 3.5, 12.0);
-            targetLookAt.set(8.0, 1.4, 8.0);
-
-            drawLmsQuestion();
-        }
-
-        function drawLmsQuestion() {
-            clearInterval(examTimerInterval);
-            examTimerSeconds = 30;
-            document.getElementById('quiz-countdown').innerHTML = `<i data-lucide="clock" class="w-4 h-4 text-red-500 animate-pulse"></i> Time Remaining: ${examTimerSeconds}s`;
-            lucide.createIcons();
-
-            const questions = lmsDatabase[currentActiveExamSubject];
-            if (currentQuestionIndex >= questions.length) {
-                concludeLmsExam();
-                return;
-            }
-
-            const activeQ = questions[currentQuestionIndex];
-            document.getElementById('quiz-meta-tag').textContent = `${currentActiveExamSubject.toUpperCase()} // CASE ${currentQuestionIndex + 1}`;
-            document.getElementById('quiz-question-lbl').textContent = activeQ.q;
-
-            const optionsBox = document.getElementById('quiz-options-container');
-            optionsBox.innerHTML = '';
-            
-            activeQ.a.forEach((text, idx) => {
-                optionsBox.innerHTML += `
-                    <label class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200/80 rounded-xl hover:border-brandPrimary/35 hover:bg-slate-50 transition cursor-pointer text-xs">
-                        <div class="flex items-center gap-3">
-                            <input type="radio" name="active-quiz-option" value="${idx}" class="w-4 h-4 border-slate-300 text-brandPrimary focus:ring-brandPrimary">
-                            <span class="text-slate-600 font-medium">${text}</span>
-                        </div>
-                    </label>
-                `;
-            });
-
-            examTimerInterval = setInterval(() => {
-                examTimerSeconds--;
-                document.getElementById('quiz-countdown').innerHTML = `<i data-lucide="clock" class="w-4 h-4 text-red-500"></i> Time Remaining: ${examTimerSeconds}s`;
-                lucide.createIcons();
-                if (examTimerSeconds <= 0) {
-                    clearInterval(examTimerInterval);
-                    submitQuizOption(); // auto-lock
-                }
-            }, 1000);
-        }
-
-        function submitQuizOption() {
-            clearInterval(examTimerInterval);
-            const questions = lmsDatabase[currentActiveExamSubject];
-            const activeQ = questions[currentQuestionIndex];
-
-            const selectedRadio = document.querySelector('input[name="active-quiz-option"]:checked');
-            let selectedVal = selectedRadio ? parseInt(selectedRadio.value) : -1;
-
-            if (selectedVal === activeQ.correct) {
-                playAudioTrigger('success');
-                currentExamScore++;
-            } else {
-                playAudioTrigger('fail');
-            }
-
-            currentQuestionIndex++;
-            drawLmsQuestion();
-        }
-
-        function concludeLmsExam() {
-            document.getElementById('exam-quiz-board').classList.add('hidden');
-            document.getElementById('exam-launcher-block').classList.remove('hidden');
-
-            const totalQs = lmsDatabase[currentActiveExamSubject].length;
-            const finalPercentage = Math.round((currentExamScore / totalQs) * 100);
-            const passed = finalPercentage >= 50;
-
-            const finalRecord = {
-                studentName: currentExamCandidate,
-                exam: currentActiveExamSubject.toUpperCase(),
-                score: `${finalPercentage}%`,
-                status: passed ? "PASSED" : "FAILED"
-            };
-
-            state.grades.unshift(finalRecord);
-            logEvent(`Exam finalized: ${finalRecord.studentName} scored ${finalRecord.score} on ${finalRecord.exam}`);
-            playAudioTrigger(passed ? 'success' : 'fail');
-
-            drawGradesLedger();
-            switchTab('dashboard');
-        }
-
-        function drawGradesLedger() {
-            const tbody = document.getElementById('grades-ledger-body');
-            tbody.innerHTML = '';
-            
-            if (state.grades.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="px-4 py-4 text-slate-400 italic text-center">No examination entries exist.</td></tr>`;
-                return;
-            }
-
-            state.grades.forEach(r => {
-                const statusBadge = r.status === 'PASSED' 
-                    ? 'bg-emerald-50 text-brandSuccess border-emerald-100' 
-                    : 'bg-red-50 text-brandDanger border-red-100';
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="px-4 py-3 font-semibold text-slate-700">${r.studentName}</td>
-                        <td class="px-4 py-3 text-slate-500 font-medium font-mono">${r.exam}</td>
-                        <td class="px-4 py-3 font-semibold text-slate-800">${r.score}</td>
-                        <td class="px-4 py-3">
-                            <span class="px-2 py-0.5 border rounded-full text-[0.6rem] font-bold ${statusBadge}">${r.status}</span>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        // 5. Faculty & Recruitment Module
-        function handleRecruitFaculty(e) {
-            e.preventDefault();
-            const name = document.getElementById('faculty-name');
-            const role = document.getElementById('faculty-role');
-            const dept = document.getElementById('faculty-dept');
-            const hours = document.getElementById('faculty-hours');
-
-            const newTeacher = {
-                name: name.value,
-                role: role.value,
-                dept: dept.value,
-                hours: hours.value
-            };
-
-            state.teachers.push(newTeacher);
-            
-            name.value = '';
-            role.value = '';
-            hours.value = '';
-
-            logEvent(`New faculty contract finalized: ${newTeacher.name} joins ${newTeacher.dept}`);
-            playAudioTrigger('success');
-            
-            drawFacultyDirectory();
-            populateTeacherSelectors();
-        }
-
-        function drawFacultyDirectory() {
-            const grid = document.getElementById('teachers-grid-block');
-            grid.innerHTML = '';
-
-            state.teachers.forEach(t => {
-                const colorTheme = t.dept === 'STEM' ? 'text-brandPrimary bg-brandPrimary/10 border-brandPrimary/20' : 'text-purple-600 bg-purple-500/10 border-purple-500/20';
-                grid.innerHTML += `
-                    <div class="p-4 bg-slate-50/50 border border-slate-200/60 rounded-xl flex items-start gap-4 hover:bg-slate-50 transition">
-                        <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 border border-slate-200">
-                            <i data-lucide="user" class="w-5 h-5"></i>
-                        </div>
-                        <div class="flex-1 space-y-1 text-xs">
-                            <div class="flex justify-between items-start">
-                                <h4 class="font-bold text-slate-800">${t.name}</h4>
-                                <span class="text-[0.5rem] font-bold px-1.5 py-0.5 rounded uppercase font-mono border ${colorTheme}">${t.dept}</span>
-                            </div>
-                            <p class="text-[0.65rem] text-slate-500">${t.role}</p>
-                            <div class="flex justify-between items-center pt-2 border-t border-slate-100 mt-2">
-                                <span class="text-slate-400 font-mono text-[0.65rem]">Office Hours: ${t.hours}</span>
-                                <button onclick="bookConsultationSlot('${t.name}')" class="text-brandPrimary hover:underline font-bold uppercase text-[0.55rem]">Book Consult</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-            lucide.createIcons();
-        }
-
-        function populateTeacherSelectors() {
-            const select = document.getElementById('class-teacher-select');
-            select.innerHTML = '';
-            state.teachers.forEach(t => {
-                select.innerHTML += `<option value="${t.name}">${t.name}</option>`;
-            });
-        }
-
-        function bookConsultationSlot(profName) {
-            const timeSelected = prompt(`Specify consultation focus and hour window with ${profName}:`, "Quantum Cryptography Audit @ 14:00");
-            if (timeSelected) {
-                const booking = {
-                    id: 'bkg-' + Date.now(),
-                    teacher: profName,
-                    details: timeSelected
-                };
-                state.bookings.push(booking);
-                logEvent(`Consultation session scheduled: ${booking.teacher} -> "${booking.details}"`);
-                playAudioTrigger('success');
-                drawConsultationBookings();
-            }
-        }
-
-        function deleteBooking(id) {
-            const b = state.bookings.find(bk => bk.id === id);
-            if (b) {
-                state.bookings = state.bookings.filter(bk => bk.id !== id);
-                logEvent(`Consultation canceled: ${b.teacher}`);
-                playAudioTrigger('fail');
-                drawConsultationBookings();
-            }
-        }
-
-        function drawConsultationBookings() {
-            const container = document.getElementById('consultation-bookings-block');
-            container.innerHTML = '';
-            if (state.bookings.length === 0) {
-                container.innerHTML = `<p class="text-slate-400 italic text-center py-1">No pending consultation bookings scheduled.</p>`;
-                return;
-            }
-            state.bookings.forEach(b => {
-                container.innerHTML += `
-                    <div class="p-2.5 bg-white border border-slate-200/60 rounded-xl flex items-center justify-between hover:shadow-sm transition text-xs">
-                        <div class="space-y-0.5">
-                            <span class="font-bold text-slate-800">${b.teacher}</span>
-                            <p class="text-slate-400 text-[0.65rem]">${b.details}</p>
-                        </div>
-                        <button onclick="deleteBooking('${b.id}')" class="p-1 hover:bg-red-50 text-slate-400 hover:text-brandDanger rounded transition">
-                            <i data-lucide="x" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                `;
-            });
-            lucide.createIcons();
-        }
-
-        /* =========================================================================
-           HUD & ZEN INSPECTION TOGGLE
-           ========================================================================= */
-        function toggleHUDVisibility() {
-            playAudioTrigger('ping');
-            const appHUD = document.getElementById('app-root');
-            const revealBtn = document.getElementById('btn-reveal-hud');
-
-            if (isUIVisible) {
-                appHUD.style.opacity = '0';
-                setTimeout(() => {
-                    appHUD.classList.add('pointer-events-none');
-                    revealBtn.classList.remove('scale-0');
-                }, 500);
-            } else {
-                appHUD.classList.remove('pointer-events-none');
-                appHUD.style.opacity = '1';
-                revealBtn.classList.add('scale-0');
-            }
-            isUIVisible = !isUIVisible;
-        }
-
-        /* =========================================================================
-           ANIMATION & TICK RENDERING LOOPS
-           ========================================================================= */
-        const clock = new THREE.Clock();
-
-        function mainLoop() {
-            requestAnimationFrame(mainLoop);
-            const elapsed = clock.getElapsedTime();
-            const delta = clock.getDelta();
-
-            // 1. Slow, passive campus lawn rotation
-            campusGroup.rotation.y += 0.03 * delta;
-
-            // 2. Animate central fountain ripples
-            waterPlane.position.y = 0.05 + Math.sin(elapsed * 2.5) * 0.012;
-
-            // 3. Smooth Camera Fly-To Lerping interpolations [1, 2]
-            currentCamPos.lerp(targetCamPos, 0.04);
-            currentLookAt.lerp(targetLookAt, 0.04);
-
-            camera.position.copy(currentCamPos);
-            controls.target.copy(currentLookAt);
-
-            controls.update();
-            renderer.render(scene, camera);
-        }
-
-        /* =========================================================================
-           CLOCK & WINDOW INITIALIZERS
-           ========================================================================= */
-        function startLiveClock() {
-            setInterval(() => {
-                const now = new Date();
-                document.getElementById('live-system-clock').textContent = now.toTimeString().split(' ')[0] + " UTC";
-            }, 1000);
-        }
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        function igniteCampusApp() {
-            document.getElementById('boot-screen').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('boot-screen').style.display = 'none';
-                
-                // Initialize positions [1]
-                camera.position.set(15, 12, 18);
-                controls.update();
-
-                requestAnimationFrame(mainLoop);
-            }, 700);
-        }
-
-        // On document load bootstrap
-        (function() {
-            startLiveClock();
-            
-            // Build UI structures from local storage cache state
-            drawStudentRegistryTable();
-            populateStudentDropdown();
-            drawClassRoster();
-            drawGradesLedger();
-            drawTasks();
-            drawFacultyDirectory();
-            populateTeacherSelectors();
-            drawConsultationBookings();
-            drawActivityLogs();
-            updateDashboardMetrics();
-        })();
-    </script>
 </body>
 </html>
