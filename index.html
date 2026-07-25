@@ -103,6 +103,34 @@
   .badge.branch{ color: var(--add); border-color: var(--add-dim); background: var(--add-dim); }
   .badge.branch::before{ content: "⎇ "; }
 
+  .resume-btn{
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    border-radius: 7px;
+    padding: 9px 14px;
+    margin-bottom: 18px;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .resume-btn svg{ width: 15px; height: 15px; flex: none; }
+  .resume-btn:hover{
+    text-decoration: none;
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+  .resume-btn-sub{
+    color: rgba(255,255,255,0.55);
+    font-weight: 400;
+    font-size: 12px;
+  }
+
   .meta-row{
     display:flex; flex-wrap:wrap; gap: 16px 22px;
     border-top: 1px solid var(--rule);
@@ -323,6 +351,12 @@
       <span class="badge">Azure DevOps</span>
       <span class="badge">MSSQL</span>
     </div>
+
+    <a class="resume-btn" href="Nitesh_Gupta_DotNet_FullStack_Developer.pdf" download>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download résumé
+      <span class="resume-btn-sub">.pdf</span>
+    </a>
 
     <div class="meta-row">
       <span class="meta-item">
